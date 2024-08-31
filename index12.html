@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Data in jsonbin.io</title>
+</head>
+<body>
+
+    <h1>Transaction Data Form</h1>
+    <button onclick="storeTransactionData()">Save Transaction Data</button>
+
+    <script>
+        const apiKey = '$2a$10$fo4jeUVSFFG3lRpwg/2.Q.ZHxrXYPQvOSEWioF5YlX23YGTv67nvO'; // Your jsonbin.io API key
+        const binUrl = 'https://api.jsonbin.io/v3/b/66d2e632acd3cb34a87c40d1'; // Your JSONBin URL
+
+        function storeTransactionData() {
+            const newTransaction = {
+                time: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString(),
+                items: {
+                    item1: "Banana Shake",
+                    item2: "Mango Juice"
+                },
+                totalAmount: 150,
+                paymentApp: "Google Pay"
+            };
+
+            // Create a new XMLHttpRequest object
+            let req = new XMLHttpRequest();
+
+            // Configure it: PUT-request for the URL
+            req.open("PUT", binUrl, true);
+
+            // Set the request headers
+            req.setRequestHeader("Content-Type", "application/json");
+            req.setRequestHeader("X-Master-Key", apiKey);
+
+            req.onreadystatechange = () => {
+                if (req.readyState === XMLHttpRequest.DONE) {
+                    if (req.status === 200) {
+                        console.log("Transaction data saved:", req.responseText);
+                    } else {
+                        console.error("Failed to save transaction data:", req.statusText);
+                    }
+                }
+            };
+
+            // Send the request with the transaction data
+            req.send(JSON.stringify(newTransaction));
+        }
+    </script>
+
+</body>
+</html>
